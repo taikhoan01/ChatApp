@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class LoginViewController: UIViewController {
     
@@ -68,6 +69,9 @@ class LoginViewController: UIViewController {
                                                             style: .done,
                                                             target: self,
                                                             action: #selector(didTapRegister))
+        loginButton.addTarget(self,
+                              action: #selector(loginButtonTapped),
+                              for: .touchUpInside)
         emailField.delegate = self
         passwordField.delegate = self
         
@@ -125,6 +129,15 @@ class LoginViewController: UIViewController {
 //        spinner.show(in: view)
 
 // MARK: Firebase Log In
+        FirebaseAuth.Auth.auth().signIn(withEmail: email, password: password, completion: { [weak self] authResult, error in
+            guard let result = authResult, error == nil else{
+                print("errro")
+                return
+            }
+            let uset = result.user
+            print("💕\(uset)")
+        })
+        
 //        FirebaseAuth.Auth.auth().signIn(withEmail: email, password: password, completion: { [weak self] authResult, error in
 //            guard let strongSelf = self else {
 //                return
