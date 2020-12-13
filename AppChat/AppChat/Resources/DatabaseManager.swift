@@ -64,7 +64,7 @@ extension DatabaseManager {
 
     }
 
-    /// Inserts new user to database
+    // Inserts new user to database
     public func insertUser(with user: ChatAppUser, completion: @escaping (Bool) -> Void) {
         database.child(user.safeEmail).setValue([
             "first_name": user.firstName,
@@ -121,7 +121,7 @@ extension DatabaseManager {
         })
     }
 
-    /// Gets all users from database
+    // Lấy tất cả các user trong database
     public func getAllUsers(completion: @escaping (Result<[[String: String]], Error>) -> Void) {
         database.child("users").observeSingleEvent(of: .value, with: { snapshot in
             guard let value = snapshot.value as? [[String: String]] else {
@@ -144,21 +144,9 @@ extension DatabaseManager {
         }
     }
 
-    /*
-        users => [
-           [
-               "name":
-               "safe_email":
-           ],
-           [
-               "name":
-            "safe_email":
-           ]
-       ]
-        */
 }
 
-// MARK: - Sending messages / conversations
+// MARK: - Gửi tin nhắn / conversations
 
 extension DatabaseManager {
 
@@ -189,7 +177,7 @@ extension DatabaseManager {
             ]
            */
 
-    /// Creates a new conversation with target user emamil and first message sent
+    // Tạo mới conversation với emamil người dùng mục tiêu và tin nhắn đầu tiên được gửi
     public func createNewConversation(with otherUserEmail: String, name: String, firstMessage: Message, completion: @escaping (Bool) -> Void) {
         guard let currentEmail = UserDefaults.standard.value(forKey: "email") as? String,
             let currentNamme = UserDefaults.standard.value(forKey: "name") as? String else {
@@ -257,7 +245,7 @@ extension DatabaseManager {
                     "is_read": false
                 ]
             ]
-            // Update recipient conversaiton entry
+            // Cập nhật mục nhập cuộc trò chuyện của người nhận
 
             self?.database.child("\(otherUserEmail)/conversations").observeSingleEvent(of: .value, with: { [weak self] snapshot in
                 if var conversatoins = snapshot.value as? [[String: Any]] {
@@ -382,7 +370,7 @@ extension DatabaseManager {
         })
     }
 
-    /// Fetches and returns all conversations for the user with passed in email
+    // Tìm nạp và trả về tất cả các cuộc hội thoại cho người dùng đã chuyển qua email
     public func getAllConversations(for email: String, completion: @escaping (Result<[Conversation], Error>) -> Void) {
         database.child("\(email)/conversations").observe(.value, with: { snapshot in
             guard let value = snapshot.value as? [[String: Any]] else{
@@ -414,7 +402,7 @@ extension DatabaseManager {
         })
     }
 
-    /// Gets all mmessages for a given conversatino
+    // Nhận tất cả các tin nhắn cho một cuộc trò chuyện nhất định
     public func getAllMessagesForConversation(with id: String, completion: @escaping (Result<[Message], Error>) -> Void) {
         database.child("\(id)/messages").observe(.value, with: { snapshot in
             guard let value = snapshot.value as? [[String: Any]] else{
@@ -433,6 +421,7 @@ extension DatabaseManager {
                     let date = ChatViewController.dateFormatter.date(from: dateString)else {
                         return nil
                 }
+// Giải mã tin nhắn từ firebase
                 var kind: MessageKind?
                 if type == "photo" {
                     // photo
@@ -471,7 +460,7 @@ extension DatabaseManager {
                     kind = .location(location)
                 }
                 else {
-                    kind = .text(content)
+                    kind = .text(content.fromBase64() ?? "")
                 }
 
                 guard let finalKind = kind else {
@@ -492,7 +481,7 @@ extension DatabaseManager {
         })
     }
 
-    /// Sends a message with target conversation and message
+    // Gửi tin nhắn với cuộc trò chuyện và tin nhắn mục tiêus
     public func sendMessage(to conversation: String, otherUserEmail: String, name: String, newMessage: Message, completion: @escaping (Bool) -> Void) {
         // add new message to messages
         // update sender latest message

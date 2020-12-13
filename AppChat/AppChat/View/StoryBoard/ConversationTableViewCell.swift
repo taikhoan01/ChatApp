@@ -64,9 +64,9 @@ class ConversationTableViewCell: UITableViewCell {
                                         height: (contentView.height-20)/2)
 
     }
-
+// Giải mã tin nhắn cuối cùng
     public func configure(with model: Conversation) {
-        userMessageLabel.text = model.latestMessage.text
+        userMessageLabel.text = model.latestMessage.text.fromBase64()
         userNameLabel.text = model.name
 
         let path = "images/\(model.otherUserEmail)_profile_picture.png"

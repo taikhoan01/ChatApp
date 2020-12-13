@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		184C032F25831D6100E1D730 /* ExtensionString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 184C032E25831D6100E1D730 /* ExtensionString.swift */; };
 		1857863225779E500041D486 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1857863125779E500041D486 /* Main.storyboard */; };
 		1857863D25779FEB0041D486 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1857863B25779FEB0041D486 /* ChatViewController.swift */; };
 		1857863E25779FEB0041D486 /* LocationPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1857863C25779FEB0041D486 /* LocationPickerViewController.swift */; };
@@ -34,6 +35,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		184C032E25831D6100E1D730 /* ExtensionString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionString.swift; sourceTree = "<group>"; };
 		1857863125779E500041D486 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		1857863B25779FEB0041D486 /* ChatViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		1857863C25779FEB0041D486 /* LocationPickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationPickerViewController.swift; sourceTree = "<group>"; };
@@ -76,6 +78,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		184C032D25831D4A00E1D730 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				184C032E25831D6100E1D730 /* ExtensionString.swift */,
+			);
+			path = Extension;
+			sourceTree = "<group>";
+		};
 		1872B6122560FA850092C7F8 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
@@ -162,6 +172,7 @@
 		843819C6255E98A600B9EE29 /* AppChat */ = {
 			isa = PBXGroup;
 			children = (
+				184C032D25831D4A00E1D730 /* Extension */,
 				1872B65125610C3E0092C7F8 /* GoogleService-Info.plist */,
 				1872B6242560FB040092C7F8 /* View */,
 				1872B6122560FA850092C7F8 /* Controller */,
@@ -323,6 +334,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				184C032F25831D6100E1D730 /* ExtensionString.swift in Sources */,
 				1872B61E2560FA860092C7F8 /* LoginViewController.swift in Sources */,
 				1857864D2577A14D0041D486 /* SearchResult.swift in Sources */,
 				1857864B2577A14D0041D486 /* ChatModels.swift in Sources */,

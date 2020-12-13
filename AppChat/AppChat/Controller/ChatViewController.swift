@@ -344,7 +344,7 @@ extension ChatViewController: UIImagePickerControllerDelegate, UINavigationContr
     }
 
 }
-
+//Gửi tin nhắn
 extension ChatViewController: InputBarAccessoryViewDelegate {
 
     func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
@@ -355,11 +355,11 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
         }
 
         print("Sending: \(text)")
-
+// Mã hoá tin nhắn trước khi gửi lên firebase
         let mmessage = Message(sender: selfSender,
                                messageId: messageId,
                                sentDate: Date(),
-                               kind: .text(text))
+                               kind: .text(text.toBase64()))
 
         // Send Message
         if isNewConversation {
