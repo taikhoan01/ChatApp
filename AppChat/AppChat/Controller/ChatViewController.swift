@@ -12,6 +12,8 @@ import InputBarAccessoryView
 import SDWebImage
 import AVFoundation
 import AVKit
+import CryptoKit
+import CommonCrypto
 import CoreLocation
 
 
@@ -346,7 +348,7 @@ extension ChatViewController: UIImagePickerControllerDelegate, UINavigationContr
 }
 //Gửi tin nhắn
 extension ChatViewController: InputBarAccessoryViewDelegate {
-
+    
     func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
         guard !text.replacingOccurrences(of: " ", with: "").isEmpty,
             let selfSender = self.selfSender,
@@ -356,10 +358,11 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
 
         print("Sending: \(text)")
 // Mã hoá tin nhắn trước khi gửi lên firebase
+    
         let mmessage = Message(sender: selfSender,
                                messageId: messageId,
                                sentDate: Date(),
-                               kind: .text(text.toBase64()))
+                               kind: .text(try!text.aesEncrypt(key: "123456789abcdefg", iv: "abcdefg123456789")!))
 
         // Send Message
         if isNewConversation {

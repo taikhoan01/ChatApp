@@ -145,7 +145,7 @@ extension DatabaseManager {
     }
 
 }
-
+  
 // MARK: - Gửi tin nhắn / conversations
 
 extension DatabaseManager {
@@ -460,7 +460,7 @@ extension DatabaseManager {
                     kind = .location(location)
                 }
                 else {
-                    kind = .text(content.fromBase64() ?? "")
+                    kind = .text(content.aesDecrypt(key: "123456789abcdefg", iv: "abcdefg123456789") ?? "")
                 }
 
                 guard let finalKind = kind else {

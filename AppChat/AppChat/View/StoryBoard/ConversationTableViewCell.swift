@@ -66,7 +66,8 @@ class ConversationTableViewCell: UITableViewCell {
     }
 // Giải mã tin nhắn cuối cùng
     public func configure(with model: Conversation) {
-        userMessageLabel.text = model.latestMessage.text.fromBase64()
+        
+        userMessageLabel.text = model.latestMessage.text.aesDecrypt(key: "123456789abcdefg", iv: "abcdefg123456789")
         userNameLabel.text = model.name
 
         let path = "images/\(model.otherUserEmail)_profile_picture.png"
@@ -82,6 +83,6 @@ class ConversationTableViewCell: UITableViewCell {
                 print("failed to get image url: \(error)")
             }
         })
-    }
 
+    }
 }
