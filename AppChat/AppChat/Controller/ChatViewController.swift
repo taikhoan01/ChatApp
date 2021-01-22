@@ -21,7 +21,9 @@ final class ChatViewController: MessagesViewController {
 
     private var senderPhotoURL: URL?
     private var otherUserPhotoURL: URL?
-
+    let keyData   = "keyData890123456".data(using:String.Encoding.utf8)!
+    let keyText: String  = "123456789abcdefg"
+    let keyIv:String = "abcdefg123456789"
     public static let dateFormatter: DateFormatter = {
         let formattre = DateFormatter()
         formattre.dateStyle = .medium
@@ -250,13 +252,23 @@ extension ChatViewController: UIImagePickerControllerDelegate, UINavigationContr
             let selfSender = selfSender else {
                 return
         }
-
-        if let image = info[.editedImage] as? UIImage, let imageData =  image.pngData() {
+// ma hoa anh
+        if let image = info[.editedImage] as? UIImage {
+            var imageData:Data?
+            guard let data =  image.pngData() else {
+                return
+            }
+            do {
+                imageData = try aesCBCEncrypt(data:data, keyData:keyData)
+            }
+            catch (let status) {
+                print("Error aesCBCEncrypt: \(status)")
+            }
             let fileName = "photo_message_" + messageId.replacingOccurrences(of: " ", with: "-") + ".png"
 
             // Upload image
 
-            StorageManager.shared.uploadMessagePhoto(with: imageData, fileName: fileName, completion: { [weak self] result in
+            StorageManager.shared.uploadMessagePhoto(with: imageData!, fileName: fileName, completion: { [weak self] result in
                 guard let strongSelf = self else {
                     return
                 }
@@ -362,11 +374,11 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
         let mmessage = Message(sender: selfSender,
                                messageId: messageId,
                                sentDate: Date(),
-                               kind: .text(try!text.aesEncrypt(key: "123456789abcdefg", iv: "abcdefg123456789")!))
+                               kind: .text(try!text.aesEncrypt(key: keyText, iv: keyIv)!))
 
-        // Send Message
+        // Gửi Message
         if isNewConversation {
-            // create convo in database
+            // tạo cuộc trò chuyện
             DatabaseManager.shared.createNewConversation(with: otherUserEmail, name: self.title ?? "User", firstMessage: mmessage, completion: { [weak self]success in
                 if success {
                     print("message sent")
@@ -386,7 +398,7 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
                 return
             }
 
-            // append to existing conversation data
+            // check gui tin nhan thanh cong
             DatabaseManager.shared.sendMessage(to: conversationId, otherUserEmail: otherUserEmail, name: name, newMessage: mmessage, completion: { [weak self] success in
                 if success {
                     self?.messageInputBar.inputTextView.text = nil
@@ -400,7 +412,7 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
     }
 
     private func createMessageId() -> String? {
-        // date, otherUesrEmail, senderEmail, randomInt
+        
         guard let currentUserEmail = UserDefaults.standard.value(forKey: "email") as? String else {
             return nil
         }
@@ -444,7 +456,16 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
             guard let imageUrl = media.url else {
                 return
             }
-            imageView.sd_setImage(with: imageUrl, completed: nil)
+            
+            do {
+                let cryptData = try Data(contentsOf: imageUrl)
+                let decryptData = try aesCBCDecrypt(data:cryptData, keyData:keyData)
+                imageView.image = UIImage(data: decryptData!)
+            }
+            catch (let status) {
+                print("Error aesCBCDecrypt: \(status)")
+            }
+    //        imageView.sd_setImage(with: imageUrl, completed: nil)
         default:
             break
         }
